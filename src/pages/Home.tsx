@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { FeedCard } from "@/components/feed/FeedCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { StoriesBar } from "@/components/stories/StoriesBar";
 
 interface Post {
   id: string;
@@ -67,24 +69,51 @@ export const Home = () => {
 
       if (error) throw error;
 
-      const transformedPosts: Post[] = (data || []).map((post: any) => ({
-        id: post.id,
-        authorId: post.user_id,
-        author: {
-          username: post.profiles?.handle || "user",
-          displayName: post.profiles?.display_name || "User",
-          avatar: post.profiles?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.user_id}`,
-          verified: post.profiles?.verified || false,
-          isFollowing: false,
-        },
-        content: {
-          type: post.content_type as "image" | "text",
-          url: post.content_url || undefined,
-          caption: post.caption || "",
-        },
-        engagement: { likes: 0, comments: 0, shares: 0 },
-        timestamp: new Date(post.created_at).toLocaleDateString(),
-      }));
+      const postIds = (data || []).map((post: any) => post.id);
+      const { data: likesData } = await supabase.from("likes").select("post_id").in("post_id", postIds);
+      const { data: commentsData } = await supabase.from("comments").select("post_id").in("post_id", postIds);
+
+      const likesCounts = likesData?.reduce((acc: any, like: any) => {
+        acc[like.post_id] = (acc[like.post_id] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      const commentsCounts = commentsData?.reduce((acc: any, comment: any) => {
+        acc[comment.post_id] = (acc[comment.post_id] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      const transformedPosts: Post[] = (data || []).map((post: any) => {
+        const profile = post.profiles;
+        let contentUrl = post.content_url;
+        if (contentUrl && !contentUrl.startsWith('http')) {
+          const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(contentUrl);
+          contentUrl = publicUrl;
+        }
+
+        return {
+          id: post.id,
+          authorId: post.user_id,
+          author: {
+            username: profile?.handle || "user",
+            displayName: profile?.display_name || "User",
+            avatar: profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.user_id}`,
+            verified: profile?.verified || false,
+            isFollowing: false,
+          },
+          content: {
+            type: post.content_type as "image" | "text",
+            url: contentUrl || undefined,
+            caption: post.caption || "",
+          },
+          engagement: {
+            likes: likesCounts[post.id] || 0,
+            comments: commentsCounts[post.id] || 0,
+            shares: 0,
+          },
+          timestamp: new Date(post.created_at).toLocaleDateString(),
+        };
+      });
 
       setPosts(transformedPosts);
     } catch (error) {
@@ -93,6 +122,10 @@ export const Home = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePostDeleted = (postId: string) => {
+    setPosts((currentPosts) => currentPosts.filter((post) => post.id !== postId));
   };
 
   if (loading) {
@@ -112,32 +145,28 @@ export const Home = () => {
       </div>
 
       <div className="min-h-screen bg-background pb-20 pt-16">
-        <div className="max-w-2xl mx-auto p-4">
-          {posts.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground mb-4">No posts yet</p>
-              <p className="text-sm text-muted-foreground">Be the first to share something!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <div key={post.id} className="feed-card p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <img src={post.author.avatar} alt={post.author.displayName} className="w-10 h-10 rounded-full" />
-                    <div>
-                      <p className="font-semibold">{post.author.displayName}</p>
-                      <p className="text-xs text-muted-foreground">@{post.author.username}</p>
-                    </div>
-                  </div>
-                  {post.content.url && (
-                    <img src={post.content.url} alt="Post" className="w-full rounded-xl mb-3" />
-                  )}
-                  <p className="text-sm">{post.content.caption}</p>
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="mb-4 pt-4">
+          <StoriesBar />
         </div>
+
+        {posts.length === 0 ? (
+          <div className="text-center py-12 px-4">
+            <p className="text-muted-foreground mb-4">No posts yet</p>
+            <p className="text-sm text-muted-foreground">Be the first to share something!</p>
+          </div>
+        ) : (
+          <div className="px-4 space-y-0">
+            {posts.map((post) => (
+              <FeedCard key={post.id} post={post} onPostDeleted={handlePostDeleted} />
+            ))}
+          </div>
+        )}
+
+        {posts.length > 0 && (
+          <div className="flex items-center justify-center py-8">
+            <p className="text-sm text-muted-foreground">You are all caught up! 🎉</p>
+          </div>
+        )}
       </div>
     </>
   );
