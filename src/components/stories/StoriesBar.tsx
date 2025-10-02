@@ -80,9 +80,9 @@ export const StoriesBar = () => {
                 </Avatar>
               </div>
             </div>
-            <button className="absolute bottom-0 right-0 bg-primary rounded-full p-1 ring-2 ring-background">
+            <div className="absolute bottom-0 right-0 bg-primary rounded-full p-1 ring-2 ring-background">
               <Plus className="h-4 w-4 text-primary-foreground" />
-            </button>
+            </div>
           </div>
           <span className="text-xs text-center truncate w-full">Your Story</span>
         </button>
