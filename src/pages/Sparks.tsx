@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { SparkComments } from "@/components/sparks/SparkComments";
 
 interface Spark {
   id: string;
@@ -36,6 +37,7 @@ export const Sparks = () => {
   const [touchEnd, setTouchEnd] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [commentsOpen, setCommentsOpen] = useState(false);
 
   useEffect(() => {
     loadCurrentUser();
@@ -189,7 +191,7 @@ export const Sparks = () => {
   };
 
   const handleComment = () => {
-    toast.info("Comments coming soon!");
+    setCommentsOpen(true);
   };
 
   const handleShare = async () => {
@@ -421,6 +423,15 @@ export const Sparks = () => {
           ))}
         </div>
       </div>
+
+      {/* Comments Bottom Sheet */}
+      <SparkComments
+        sparkId={currentSpark.id}
+        sparkAuthorId={currentSpark.user_id}
+        sparkAuthorHandle={currentSpark.profiles.handle}
+        isOpen={commentsOpen}
+        onClose={() => setCommentsOpen(false)}
+      />
     </div>
   );
 };
