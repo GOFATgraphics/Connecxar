@@ -264,7 +264,7 @@ export const StoriesBar = () => {
       <div className="flex gap-4 overflow-x-auto pb-4 px-4 hide-scrollbar snap-x snap-mandatory scroll-smooth">
         {/* Your Story */}
         <button
-          onClick={() => currentUserStories ? handleStoryClick(0) : navigate("/composer?type=story")}
+          onClick={() => currentUserStories && handleStoryClick(0)}
           className="flex flex-col items-center gap-2 min-w-[70px] flex-shrink-0 snap-center"
         >
           <div className="relative w-[70px] h-[70px]">
@@ -283,9 +283,15 @@ export const StoriesBar = () => {
               </div>
             </div>
             {/* Blue + icon overlay - always visible on Your Story */}
-            <div className="absolute bottom-0 right-0 bg-[#4F46E5] rounded-full p-1 ring-[3px] ring-background">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate("/composer?type=story");
+              }}
+              className="absolute bottom-0 right-0 bg-[#4F46E5] rounded-full p-1 ring-[3px] ring-background z-10 hover:bg-[#4338CA] transition-colors"
+            >
               <Plus className="h-4 w-4 text-white" strokeWidth={3} />
-            </div>
+            </button>
           </div>
           <span className="text-xs text-center truncate w-full max-w-[70px]">
             {currentUserStories ? "Your Story" : "Add Story"}
