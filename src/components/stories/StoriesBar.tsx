@@ -280,11 +280,10 @@ export const StoriesBar = () => {
                 </Avatar>
               </div>
             </div>
-            {!currentUserStories && (
-              <div className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1.5 ring-2 ring-background">
-                <Plus className="h-3.5 w-3.5 text-white" />
-              </div>
-            )}
+            {/* Blue + icon overlay - always visible on Your Story */}
+            <div className="absolute bottom-0 right-0 bg-[#4F46E5] rounded-full p-1 ring-[3px] ring-background">
+              <Plus className="h-4 w-4 text-white" strokeWidth={3} />
+            </div>
           </div>
           <span className="text-xs text-center truncate w-full max-w-[70px]">
             {currentUserStories ? "Your Story" : "Add Story"}
