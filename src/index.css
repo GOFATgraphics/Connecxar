@@ -50,6 +50,7 @@
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--secondary)));
     --gradient-glow: linear-gradient(135deg, hsl(var(--primary-glow) / 0.3), hsl(var(--accent-glow) / 0.3));
+    --gradient-story: linear-gradient(135deg, #f9ce34 0%, #ee2a7b 50%, #6228d7 100%);
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(var(--primary) / 0.05);
@@ -182,6 +183,16 @@
 
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
+  }
+
+  /* Hide scrollbar for horizontal story scrolling */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
