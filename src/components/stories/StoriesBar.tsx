@@ -106,11 +106,11 @@ export const StoriesBar = () => {
 
   return (
     <>
-      <div className="flex gap-4 overflow-x-auto pb-4 px-4 hide-scrollbar">
+      <div className="flex gap-4 overflow-x-auto pb-4 px-4 hide-scrollbar snap-x snap-mandatory scroll-smooth">
         {/* Your Story */}
         <button
           onClick={() => currentUserStories ? handleStoryClick(0) : setShowUpload(true)}
-          className="flex flex-col items-center gap-2 min-w-[70px] flex-shrink-0"
+          className="flex flex-col items-center gap-2 min-w-[70px] flex-shrink-0 snap-center"
         >
           <div className="relative w-[70px] h-[70px]">
             <div className={`absolute inset-0 rounded-full p-[3px] ${
@@ -128,8 +128,8 @@ export const StoriesBar = () => {
               </div>
             </div>
             {!currentUserStories && (
-              <div className="absolute bottom-0 right-0 bg-primary rounded-full p-1 ring-2 ring-background">
-                <Plus className="h-4 w-4 text-primary-foreground" />
+              <div className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1.5 ring-2 ring-background">
+                <Plus className="h-3.5 w-3.5 text-white" />
               </div>
             )}
           </div>
@@ -143,7 +143,7 @@ export const StoriesBar = () => {
           <button
             key={group.user_id}
             onClick={() => handleStoryClick(currentUserStories ? index + 1 : index)}
-            className="flex flex-col items-center gap-2 min-w-[70px] flex-shrink-0"
+            className="flex flex-col items-center gap-2 min-w-[70px] flex-shrink-0 snap-center"
           >
             <div className="relative w-[70px] h-[70px]">
               <div className={`absolute inset-0 rounded-full p-[3px] ${

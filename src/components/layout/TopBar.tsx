@@ -8,7 +8,7 @@ const getPageTitle = (pathname: string) => {
   switch (pathname) {
     case "/":
     case "/home":
-      return "CHILL-Z";
+      return "Connexar";
     case "/discover":
       return "Discover";
     case "/sparks":
@@ -21,7 +21,7 @@ const getPageTitle = (pathname: string) => {
       return "Notifications";
     default:
       if (pathname.startsWith("/profile/")) return "Profile";
-      return "CHILL-Z";
+      return "Connexar";
   }
 };
 

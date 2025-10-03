@@ -124,9 +124,9 @@ export const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            CHILL-Z
+            Connexar
           </CardTitle>
-          <CardDescription>Welcome! Login or create an account to continue</CardDescription>
+          <CardDescription>Welcome to Connexar! Login or create an account to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">

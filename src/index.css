@@ -4,11 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CHILL-Z Design System - Gen-Z Social Platform */
+/* Connexar Design System - Gen-Z Social Platform */
 
 @layer base {
   :root {
-    /* CHILL-Z Brand Colors */
+    /* Connexar Brand Colors */
     --background: 0 0% 100%;
     --foreground: 220 9% 15%;
 
@@ -75,7 +75,7 @@
   }
 
   .dark {
-    /* Dark Mode for CHILL-Z */
+    /* Dark Mode for Connexar */
     --background: 223 47% 4%;
     --foreground: 210 40% 98%;
 

@@ -140,7 +140,7 @@ export const Home = () => {
     <>
       <div className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showTopBar ? 'translate-y-0' : '-translate-y-full'}`}>
         <header className="h-16 px-4 flex items-center justify-center bg-background/95 backdrop-blur-md border-b border-border">
-          <h1 className="text-lg font-bold bg-gradient-primary bg-clip-text text-transparent">CHILL-Z</h1>
+          <h1 className="text-lg font-bold bg-gradient-primary bg-clip-text text-transparent">Connexar</h1>
         </header>
       </div>
 
