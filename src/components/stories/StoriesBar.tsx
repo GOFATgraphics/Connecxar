@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StoryUpload } from "./StoryUpload";
 import { StoryViewer } from "./StoryViewer";
+import { useNavigate } from "react-router-dom";
 
 interface Story {
   id: string;
@@ -173,6 +174,7 @@ const MOCK_STORIES: StoryGroup[] = [
 ];
 
 export const StoriesBar = () => {
+  const navigate = useNavigate();
   const [storyGroups, setStoryGroups] = useState<StoryGroup[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showUpload, setShowUpload] = useState(false);
@@ -262,7 +264,7 @@ export const StoriesBar = () => {
       <div className="flex gap-4 overflow-x-auto pb-4 px-4 hide-scrollbar snap-x snap-mandatory scroll-smooth">
         {/* Your Story */}
         <button
-          onClick={() => currentUserStories ? handleStoryClick(0) : setShowUpload(true)}
+          onClick={() => currentUserStories ? handleStoryClick(0) : navigate("/composer?type=story")}
           className="flex flex-col items-center gap-2 min-w-[70px] flex-shrink-0 snap-center"
         >
           <div className="relative w-[70px] h-[70px]">
