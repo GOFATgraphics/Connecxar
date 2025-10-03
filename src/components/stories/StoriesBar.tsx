@@ -24,6 +24,154 @@ interface StoryGroup {
   hasViewed: boolean;
 }
 
+// Mock stories for demonstration
+const MOCK_STORIES: StoryGroup[] = [
+  {
+    user_id: "mock-1",
+    display_name: "Sarah Chen",
+    handle: "sarahchen",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+    verified: true,
+    stories: [
+      {
+        id: "mock-s1",
+        user_id: "mock-1",
+        content_url: "https://images.unsplash.com/photo-1502139214982-d0ad755818d8?w=800",
+        content_type: "image",
+        caption: "Beautiful sunset today! 🌅",
+        created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: false,
+  },
+  {
+    user_id: "mock-2",
+    display_name: "Alex Rivera",
+    handle: "alexrivera",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+    verified: false,
+    stories: [
+      {
+        id: "mock-s2",
+        user_id: "mock-2",
+        content_url: "https://images.unsplash.com/photo-1542332213-31f87348057f?w=800",
+        content_type: "image",
+        caption: "Coffee vibes ☕",
+        created_at: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: false,
+  },
+  {
+    user_id: "mock-3",
+    display_name: "Jamie Park",
+    handle: "jamiepark",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jamie",
+    verified: true,
+    stories: [
+      {
+        id: "mock-s3",
+        user_id: "mock-3",
+        content_url: "https://images.unsplash.com/photo-1551404973-761c83935da3?w=800",
+        content_type: "image",
+        caption: "City lights ✨",
+        created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: false,
+  },
+  {
+    user_id: "mock-4",
+    display_name: "Morgan Lee",
+    handle: "morganlee",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Morgan",
+    verified: false,
+    stories: [
+      {
+        id: "mock-s4",
+        user_id: "mock-4",
+        content_url: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800",
+        content_type: "image",
+        caption: "Beach day! 🏖️",
+        created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: false,
+  },
+  {
+    user_id: "mock-5",
+    display_name: "Taylor Swift",
+    handle: "taylorswift",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Taylor",
+    verified: true,
+    stories: [
+      {
+        id: "mock-s5",
+        user_id: "mock-5",
+        content_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
+        content_type: "image",
+        caption: "Concert vibes 🎵",
+        created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: true,
+  },
+  {
+    user_id: "mock-6",
+    display_name: "Chris Evans",
+    handle: "chrisevans",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Chris",
+    verified: true,
+    stories: [
+      {
+        id: "mock-s6",
+        user_id: "mock-6",
+        content_url: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
+        content_type: "image",
+        caption: "Workout time! 💪",
+        created_at: new Date(Date.now() - 7 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: true,
+  },
+  {
+    user_id: "mock-7",
+    display_name: "Emma Stone",
+    handle: "emmastone",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
+    verified: true,
+    stories: [
+      {
+        id: "mock-s7",
+        user_id: "mock-7",
+        content_url: "https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=800",
+        content_type: "image",
+        caption: "Nature walk 🌲",
+        created_at: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: false,
+  },
+  {
+    user_id: "mock-8",
+    display_name: "Ryan Reynolds",
+    handle: "ryanreynolds",
+    avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ryan",
+    verified: true,
+    stories: [
+      {
+        id: "mock-s8",
+        user_id: "mock-8",
+        content_url: "https://images.unsplash.com/photo-1476234251651-f353703a034d?w=800",
+        content_type: "image",
+        caption: "Movie night 🎬",
+        created_at: new Date(Date.now() - 9 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
+    hasViewed: false,
+  },
+];
+
 export const StoriesBar = () => {
   const [storyGroups, setStoryGroups] = useState<StoryGroup[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -93,7 +241,12 @@ export const StoriesBar = () => {
       group.hasViewed = group.stories.every((s) => viewedStoryIds.has(s.id));
     });
 
-    setStoryGroups(Object.values(grouped));
+    const realStories = Object.values(grouped);
+    
+    // Add mock stories to demonstrate scrolling (only if there are fewer than 5 real stories)
+    const allStories = realStories.length < 5 ? [...realStories, ...MOCK_STORIES] : realStories;
+    
+    setStoryGroups(allStories);
   };
 
   const currentUserStories = storyGroups.find(g => g.user_id === currentUser?.id);

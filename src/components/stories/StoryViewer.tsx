@@ -45,10 +45,13 @@ export const StoryViewer = ({ open, onOpenChange, storyGroups, initialGroupIndex
   const [hasLiked, setHasLiked] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
 
-  const STORY_DURATION = 15000;
+  const STORY_DURATION = 5000; // 5 seconds per story
+  const MIN_SWIPE_DISTANCE = 50;
   const currentGroup = storyGroups[currentGroupIndex];
   const currentStory = currentGroup?.stories[currentStoryIndex];
 
@@ -193,6 +196,70 @@ export const StoryViewer = ({ open, onOpenChange, storyGroups, initialGroupIndex
     }
   };
 
+  const nextGroup = () => {
+    if (currentGroupIndex < storyGroups.length - 1) {
+      setCurrentGroupIndex((prev) => prev + 1);
+      setCurrentStoryIndex(0);
+      setProgress(0);
+    } else {
+      onOpenChange(false);
+    }
+  };
+
+  const prevGroup = () => {
+    if (currentGroupIndex > 0) {
+      setCurrentGroupIndex((prev) => prev - 1);
+      const prevGroup = storyGroups[currentGroupIndex - 1];
+      setCurrentStoryIndex(prevGroup.stories.length - 1);
+      setProgress(0);
+    }
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+    });
+    setPaused(true);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+    });
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) {
+      setPaused(false);
+      return;
+    }
+
+    const distanceX = touchStart.x - touchEnd.x;
+    const distanceY = touchStart.y - touchEnd.y;
+    const isHorizontalSwipe = Math.abs(distanceX) > Math.abs(distanceY);
+    const isVerticalSwipe = Math.abs(distanceY) > Math.abs(distanceX);
+
+    // Swipe left (next user's stories)
+    if (isHorizontalSwipe && distanceX > MIN_SWIPE_DISTANCE) {
+      nextGroup();
+    }
+    // Swipe right (previous user's stories)
+    else if (isHorizontalSwipe && distanceX < -MIN_SWIPE_DISTANCE) {
+      prevGroup();
+    }
+    // Swipe down (close viewer)
+    else if (isVerticalSwipe && distanceY < -MIN_SWIPE_DISTANCE) {
+      onOpenChange(false);
+    }
+
+    setPaused(false);
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
   if (!currentGroup || !currentStory) return null;
 
   const isOwnStory = currentUser?.id === currentStory.user_id;
@@ -253,13 +320,16 @@ export const StoryViewer = ({ open, onOpenChange, storyGroups, initialGroupIndex
             </div>
 
             {/* Story content */}
-            <div className="flex-1 flex items-center justify-center">
+            <div 
+              className="flex-1 flex items-center justify-center"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
               <div
                 className="absolute inset-0 flex"
                 onMouseDown={() => setPaused(true)}
                 onMouseUp={() => setPaused(false)}
-                onTouchStart={() => setPaused(true)}
-                onTouchEnd={() => setPaused(false)}
               >
                 <div className="flex-1" onClick={prevStory} />
                 <div className="flex-1" onClick={nextStory} />
